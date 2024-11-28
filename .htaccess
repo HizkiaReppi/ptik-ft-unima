@@ -1,0 +1,21 @@
+# Nonaktifkan directory listing
+Options -Indexes
+
+# Blokir akses langsung ke file sensitif
+<FilesMatch "\.(env|ini|log|sh|sql|json|xml|bak|config|php~|swp|DS_Store)$">
+    Require all denied
+</FilesMatch>
+
+# Ubah URL menjadi lowercase
+RewriteEngine On
+
+# Abaikan file/direktori yang sudah ada
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Periksa apakah URL mengandung huruf besar
+RewriteCond %{REQUEST_URI} [A-Z]
+RewriteRule ^(.*)$ ${lc:$1} [R=301,L]
+
+# Redirect semua permintaan ke index.php
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
